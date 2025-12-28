@@ -150,6 +150,8 @@ export class Chat {
   restrictTime: number
   @prop({ required: true, default: false })
   banNewTelegramUsers: boolean
+  @prop({ required: false, default: false })
+  banNewTelegramUsersFromId: number
   @prop({ enum: SubscriptionStatus, default: SubscriptionStatus.inactive })
   subscriptionStatus: SubscriptionStatus
   @prop()

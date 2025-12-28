@@ -11,8 +11,15 @@ export function setupBanNewTelegramUsers(bot: Telegraf<Context>) {
     clarifyIfPrivateMessages,
     async (ctx) => {
       let chat = ctx.dbchat
+
+      let [_cmd, fromIdsString] = (ctx.update.message.text as string)
+        .split(" ")
+        .map(arg => arg.trim())
+      chat.banNewTelegramUsersFromId = parseInt(fromIdsString) || 1_000_000_000;
       chat.banNewTelegramUsers = !chat.banNewTelegramUsers
+
       await saveChatProperty(chat, 'banNewTelegramUsers')
+      await saveChatProperty(chat, 'banNewTelegramUsersFromId')
       ctx.replyWithMarkdown(
         strings(
           ctx.dbchat,

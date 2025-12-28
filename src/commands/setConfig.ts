@@ -144,6 +144,18 @@ export function setupSetConfig(bot: Telegraf<Context>) {
             ctx.dbchat.skipVerifiedUsers = boolValue
             break
           }
+          case 'banNewTelegramUsers': {
+            const boolValue = value === 'true'
+            ctx.dbchat.banNewTelegramUsers = boolValue
+            break
+          }
+          case 'banNewTelegramUsersFromId': {
+            const numValue = +value
+            if (!isNaN(numValue) && numValue > 0) {
+              ctx.dbchat.banNewTelegramUsersFromId = numValue
+            }
+            break
+          }
           default:
             break
         }
