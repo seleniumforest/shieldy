@@ -50,6 +50,8 @@ import { messageSaver } from '@middlewares/messageSaver'
 import { setup1inchInfo } from '@commands/1inch'
 import { checkSubscription } from '@middlewares/checkSubscription'
 import { setupSubscription } from '@commands/subscription'
+import { checkChatCopies } from '@middlewares/checkChatCopies'
+import { setupBanChatCopies } from '@commands/banChatCopies'
 
 // Ignore all messages that are too old
 bot.use(checkTime)
@@ -73,6 +75,8 @@ bot.use(checkRestrict)
 bot.use(checkNoChannelLinks)
 // Save messages that need saving
 bot.use(messageSaver)
+// Remove chat/group clones
+bot.use(checkChatCopies)
 // Commands
 setupHelp(bot)
 setupLanguage(bot)
@@ -98,6 +102,7 @@ setupViewConfig(bot)
 setupButtonText(bot)
 setupAllowInvitingBots(bot)
 setupAdmin(bot)
+setupBanChatCopies(bot)
 setupGreetingButtons(bot)
 setupSkipOldUsers(bot)
 setupSkipVerifiedUsers(bot)
@@ -120,8 +125,8 @@ if (!isMaster) {
   bot.telegram
     .getMe()
     .then((botInfo) => {
-      ;(bot as any).botInfo = botInfo
-      ;(bot as any).options.username = botInfo.username
+      ; (bot as any).botInfo = botInfo
+        ; (bot as any).options.username = botInfo.username
       console.info(`Update handler on ${process.pid} started`)
     })
     .catch(report)

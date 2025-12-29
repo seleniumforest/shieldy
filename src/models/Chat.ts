@@ -89,9 +89,22 @@ export class MemberWrapper {
   member: ChatMember
 }
 
+export class LinkedChannelInfo {
+  @prop({ required: true })
+  id: number
+  @prop({ required: true })
+  title: string
+  @prop({ required: true })
+  type: string
+  @prop({ required: true })
+  cachedAt: number
+}
+
 export class Chat {
   @prop({ required: true, index: true, unique: true })
   id: number
+  @prop({ required: false, unique: true })
+  linkedChannelInfo: LinkedChannelInfo
   @prop({ required: true, enum: Language, default: Language.ENGLISH })
   language: Language
   @prop({ required: true, enum: CaptchaType, default: CaptchaType.DIGITS })
@@ -148,6 +161,8 @@ export class Chat {
   members: MemberWrapper[]
   @prop({ required: true, default: 24 })
   restrictTime: number
+  @prop({ required: true, default: false })
+  banChatCopies: boolean
   @prop({ required: true, default: false })
   banNewTelegramUsers: boolean
   @prop({ required: false, default: false })
