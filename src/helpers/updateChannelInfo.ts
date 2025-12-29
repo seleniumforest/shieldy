@@ -7,11 +7,9 @@ const CACHE_TTL = 1000 * 60 * 60 * 12;
 export async function getLinkedChannelInfo(ctx: Context) {
     let info = ctx.dbchat.linkedChannelInfo;
     if (info && info.cachedAt + CACHE_TTL > Date.now()) {
-        console.log("cache hit")
         return info;
     }
 
-    console.log("cache miss")
     await updateLinkedChannelInfo(ctx);
     return ctx.dbchat.linkedChannelInfo;
 }

@@ -28,20 +28,19 @@ export async function checkChatCopies(ctx: Context, next: () => any) {
     let userTitle = `${from.first_name}${from.last_name ? ' ' + from.last_name : ''}`;
     let chatTitle = ctx.update.message.chat.title;
     if (smartCompare(userTitle, chatTitle)) {
-        deleteMessageSafe(ctx)
+        deleteMessageSafe(ctx);
+        return next();
     }
 
     let linkedChannel = await getLinkedChannelInfo(ctx);
-    if (smartCompare(linkedChannel.title, userTitle)) {
+    if (smartCompare(linkedChannel.title, userTitle))
         deleteMessageSafe(ctx)
-    }
 
     next()
 }
 
 function smartCompare(str1: string, str2: string) {
     let result = normalize(str1) === normalize(str2);
-    console.log(`smartCompare ${str1} with ${str2} returned ${result}`);
     return result;
 }
 
