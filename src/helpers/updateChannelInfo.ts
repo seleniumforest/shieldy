@@ -1,13 +1,14 @@
-import { Context, Telegram } from "telegraf";
+import { LinkedChannelInfo } from "@models/Chat";
+import { Context } from "telegraf";
+import { api } from "./api";
 import { saveChatProperty } from "./saveChatProperty";
 
-const api = new Telegram(process.env.TOKEN);
 const CACHE_TTL = 1000 * 60 * 60 * 12;
 
 export async function getLinkedChannelInfo(ctx: Context) {
     let info = ctx.dbchat.linkedChannelInfo;
     if (info && info.cachedAt + CACHE_TTL > Date.now()) {
-        return info;
+        return info.type === "none" ? undefined : info;
     }
 
     await updateLinkedChannelInfo(ctx);
@@ -16,8 +17,15 @@ export async function getLinkedChannelInfo(ctx: Context) {
 
 export async function updateLinkedChannelInfo(ctx: Context) {
     let currentChat = await ctx.getChat();
-    if (!currentChat?.linked_chat_id)
+    if (!currentChat?.linked_chat_id) {
+        ctx.dbchat.linkedChannelInfo = {
+            id: 0, title: "", type: "none",
+            cachedAt: Date.now()
+        };
+
+        await saveChatProperty(ctx.dbchat, 'linkedChannelInfo');
         return;
+    }
 
     let linkedChannel = await api.getChat(currentChat.linked_chat_id);
     if (linkedChannel.type !== "channel")
