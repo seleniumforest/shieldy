@@ -31,22 +31,24 @@ export async function checkRestrict(ctx: Context, next: () => any) {
     return
   }
   // Restrict non-chat members who leave comments on linked channel
-  let isCommentToCheck = false;
-  let rtm = ctx.update.message?.reply_to_message;
-  let username = ctx.update.message.from?.username;
-  if (rtm && rtm.sender_chat && rtm.chat && username) {
-    let linkedChannel = await getLinkedChannelInfo(ctx)
-    if (linkedChannel) {
-      isCommentToCheck = rtm.sender_chat.id === linkedChannel.id;
-      // if (isCommentToCheck) {
-      //   let chatMember = await ctx.getChatMember(ctx.update.message.from.id);
-      //   if (["restricted", "left", "kicked"].includes(chatMember.status))
-      //     isCommentToCheck = true;
-      // }
-    }
-  }
+  // let isCommentToCheck = false;
+  // let rtm = ctx.update.message?.reply_to_message;
+  // console.log(JSON.stringify(ctx));
+  // let username = ctx.update.message.from?.username;
+  // if (rtm && rtm.sender_chat && rtm.chat && username) {
+  //   let linkedChannel = await getLinkedChannelInfo(ctx)
+  //   if (linkedChannel) {
+  //     isCommentToCheck = rtm.sender_chat.id === linkedChannel.id;
+  // if (isCommentToCheck) {
+  //   let chatMember = await ctx.getChatMember(ctx.update.message.from.id);
+  //   if (["restricted", "left", "kicked"].includes(chatMember.status))
+  //     isCommentToCheck = true;
+  // }
+  //   }
+  // }
   // Check if this user is restricted
-  const restricted = isCommentToCheck || ctx.dbchat.restrictedUsers
+  let is_auto_forward = ctx.update.message?.reply_to_message?.is_automatic_forward;
+  const restricted = is_auto_forward || ctx.dbchat.restrictedUsers
     .map((u) => u.id)
     .includes(ctx.from.id)
   // If a restricted user tries to send restricted type, just delete it
