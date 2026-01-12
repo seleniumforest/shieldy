@@ -7,7 +7,7 @@ export async function checkChatCopies(ctx: Context, next: () => any) {
         return next()
     }
 
-    if (ctx.update.message.from.is_bot) {
+    if (ctx.update.message?.from?.is_bot) {
         return next()
     }
 
@@ -15,7 +15,7 @@ export async function checkChatCopies(ctx: Context, next: () => any) {
         return next()
     }
 
-    if (ctx.update.message?.is_automatic_forward) {
+    if (ctx.update?.message?.is_automatic_forward) {
         return next()
     }
 
@@ -24,9 +24,9 @@ export async function checkChatCopies(ctx: Context, next: () => any) {
     }
 
     //compare chat title with user's name
-    let from = ctx.update.message.from;
+    let from = ctx.update.message?.from;
     let userTitle = `${from.first_name}${from.last_name ? ' ' + from.last_name : ''}`;
-    let chatTitle = ctx.update.message.chat.title;
+    let chatTitle = ctx.update.message?.chat?.title;
     if (smartCompare(userTitle, chatTitle)) {
         deleteMessageSafe(ctx);
         return next();
